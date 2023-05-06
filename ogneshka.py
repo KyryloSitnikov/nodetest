@@ -18,5 +18,5 @@ def handle_message(message):
     question = message.text
     if question in responses:
         bot.reply_to(message, responses[question])
-
+print('hhh')
 bot.polling()
