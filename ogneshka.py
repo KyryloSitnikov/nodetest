@@ -8,7 +8,7 @@ bot = telebot.TeleBot('6130614504:AAHYFuTbmbNtflJFiUqwsra_vipxSNjRyLA')
 
 responses = {
     '1': 'Мене звати Огнєшкака, приємно познайомитись)))',
-    '2': 'Зараз' datetime.now().strftime("%H:%M:%S"),
+    '2': datetime.now().strftime("%H:%M:%S"),
     '3': 'Все файно), це третя відповідь!'
 }
 print(bot.token)
