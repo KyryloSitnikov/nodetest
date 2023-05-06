@@ -1,1 +1,1 @@
-worker: python3 ogneshka.py
+bot: python3 ogneshka.py
