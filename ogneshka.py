@@ -11,8 +11,8 @@ responses = {
     '2': datetime.now().strftime("%H:%M:%S"),
     '3': 'I am doing well, thanks for asking!'
 }
-
-@app.route('/', methods=['POST'])
+print(bot.token)
+@app.route('/' + bot.token, methods=['POST'])
 def webhook():
     update = telebot.types.Update.de_json(request.stream.read().decode('utf-8'))
     bot.process_new_updates([update])
