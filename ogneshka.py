@@ -6,18 +6,19 @@ import os
 app = Flask(__name__)
 bot = telebot.TeleBot('6130614504:AAHYFuTbmbNtflJFiUqwsra_vipxSNjRyLA')
 
-# Load the uk_core_news_lg model
-nlp = spacy.load('uk_core_news_lg')
+# Load the uk_core_web_md model
+nlp = spacy.load('uk_core_web_md')
 
 # Set the greeting message for the bot
 greeting_message = 'І вам здоровенькі були.'
 
 # Add your allowed user IDs here
 allowed_users = [
-# Kyrylo Sitnikov
+    # Kyrylo Sitnikov
     152274647, 
-# Oleksandr Bondarenko
-    445706100]
+    # Oleksandr Bondarenko
+    445706100
+]
 
 @app.route('/' + bot.token, methods=['POST'])
 def webhook():
