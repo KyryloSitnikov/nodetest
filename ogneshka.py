@@ -11,7 +11,7 @@ responses = {
     '2': 'Зараз '+datetime.now().strftime("%H:%M:%S"),
     '3': 'Все файно), це третя відповідь!'
 }
-
+print(bot.token)
 @app.route('/' + bot.token, methods=['POST'])
 def webhook():
     update = telebot.types.Update.de_json(request.stream.read().decode('utf-8'))
@@ -35,7 +35,7 @@ def handle_message(message):
         bot.reply_to(message, 'Я вас не розумію, перепрошую, задайте іеше питання')
 
 bot.remove_webhook()
-bot.set_webhook(url='https://<insert your app name>.herokuapp.com/' + bot.token)
+bot.set_webhook(url='https://ogneshka.herokuapp.com/' + bot.token)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
