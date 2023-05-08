@@ -6,8 +6,8 @@ import os
 app = Flask(__name__)
 bot = telebot.TeleBot('6130614504:AAHYFuTbmbNtflJFiUqwsra_vipxSNjRyLA')
 
-# Load the uk_core_news_lg model
-nlp = spacy.load('uk_core_news_lg')
+# Load the uk_core_news_md model
+nlp = spacy.load('en_core_web_sm')
 
 # Set the greeting message for the bot
 greeting_message = 'І вам здоровенькі були.'
