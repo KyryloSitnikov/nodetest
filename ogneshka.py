@@ -15,7 +15,7 @@ responses = {
 # Add your allowed user IDs here
 allowed_users = [
 # Kyrylo Sitnikov
-    152274647, 
+#    152274647, 
     789012]
 
 @app.route('/' + bot.token, methods=['POST'])
