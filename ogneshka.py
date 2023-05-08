@@ -15,8 +15,9 @@ responses = {
 # Add your allowed user IDs here
 allowed_users = [
 # Kyrylo Sitnikov
-#    152274647, 
-    789012]
+    152274647, 
+# Oleksandr Bondarenko
+    445706100]
 
 @app.route('/' + bot.token, methods=['POST'])
 def webhook():
