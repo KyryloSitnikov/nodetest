@@ -1,13 +1,23 @@
 import telebot
 import spacy
-from spacy import displacy
 from flask import Flask, request
 import os
 
 app = Flask(__name__)
 bot = telebot.TeleBot('6130614504:AAHYFuTbmbNtflJFiUqwsra_vipxSNjRyLA')
 
+# Load the uk_core_news_lg model
 nlp = spacy.load('uk_core_news_lg')
+
+# Set the greeting message for the bot
+greeting_message = 'І вам здоровенькі були.'
+
+# Add your allowed user IDs here
+allowed_users = [
+# Kyrylo Sitnikov
+    152274647, 
+# Oleksandr Bondarenko
+    445706100]
 
 @app.route('/' + bot.token, methods=['POST'])
 def webhook():
@@ -25,12 +35,18 @@ def start_command(message):
 
 @bot.message_handler(func=lambda message: True)
 def handle_message(message):
-    text = message.text
-    doc = nlp(text)
-    if doc[0].text.lower() in ('привіт', 'привет'):
-        bot.reply_to(message, 'І вам здоровенькі були!')
-    else:
-        bot.reply_to(message, 'I do not understand your message.')
+    if message.from_user.id not in allowed_users:
+        bot.reply_to(message, 'Перепрошую, ми з вами не знайомі. Мій батько не дозволяє мені спілкуватися з незнайомими людьми. Бувайте.')
+        return
+
+    # Use spaCy to check for a greeting message
+    doc = nlp(message.text.lower())
+    if 'привіт' in [token.text for token in doc] or 'привет' in [token.text for token in doc]:
+        bot.reply_to(message, greeting_message)
+        return
+
+    # Handle other messages
+    bot.reply_to(message, 'Я вас не розумію, перепрошую, задайте інше питання')
 
 bot.remove_webhook()
 bot.set_webhook(url='https://ogneshka.herokuapp.com/' + bot.token)
