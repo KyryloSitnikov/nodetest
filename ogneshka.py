@@ -1,56 +1,33 @@
-import telebot
-import spacy
-from flask import Flask, request
 import os
+from slack_sdk import WebClient
+from slack_sdk.errors import SlackApiError
+from slack_sdk.socket_mode import SocketModeClient
+from slack_sdk.socket_mode.request import SocketModeRequest
+from slack_sdk.socket_mode.response import SocketModeResponse
 
-app = Flask(__name__)
-bot = telebot.TeleBot('6130614504:AAHYFuTbmbNtflJFiUqwsra_vipxSNjRyLA')
+# Your bot token goes here. You get this when you create a new app on Slack's API website.
+BOT_TOKEN = "xoxb-4926330797984-6009354484372-CqKRezEXeK2tknBqaXx18fn2"
+APP_TOKEN = "xapp-1-A060VSC8H3J-5992406833159-f86228cbae31724c24788e73e0d77c32a9d8eeca52ea174c0d90d26d361ed138"  # You get this under the "Basic Information" tab in your Slack App settings.
 
-# Load the uk_core_news_md model
-nlp = spacy.load('en_core_web_sm')
+client = WebClient(token=BOT_TOKEN)
 
-# Set the greeting message for the bot
-greeting_message = 'І вам здоровенькі були.'
+def handle_message(payload):
+    event = payload['event']
 
-# Add your allowed user IDs here
-allowed_users = [
-    # Kyrylo Sitnikov
-    152274647, 
-    # Oleksandr Bondarenko
-    445706100
-]
+    # Check if the bot was mentioned. '@igor_bot' is the bot's user ID.
+    if 'bot_id' not in event and f'<@igor_bot>' in event['text']:
+        channel_id = event['channel']
+        thread_ts = event['ts']  # This ensures the reply goes into the thread.
 
-@app.route('/' + bot.token, methods=['POST'])
-def webhook():
-    update = telebot.types.Update.de_json(request.stream.read().decode('utf-8'))
-    bot.process_new_updates([update])
-    return '', 200
+        try:
+            client.chat_postMessage(channel=channel_id, text="Yes, Master!", thread_ts=thread_ts)
+        except SlackApiError as e:
+            print(f"Error sending message: {e.response['error']}")
 
-@app.route('/')
-def index():
-    return 'Hello, world!'
+def main():
+    socket_mode_client = SocketModeClient(app_token=APP_TOKEN, web_client=client)
+    socket_mode_client.socket_mode_request_listeners.append(handle_message)
+    socket_mode_client.start()
 
-@bot.message_handler(commands=['start'])
-def start_command(message):
-    bot.reply_to(message, 'Welcome to my bot!')
-
-@bot.message_handler(func=lambda message: True)
-def handle_message(message):
-    if message.from_user.id not in allowed_users:
-        bot.reply_to(message, 'Перепрошую, ми з вами не знайомі. Мій батько не дозволяє мені спілкуватися з незнайомими людьми. Бувайте.')
-        return
-
-    # Use spaCy to check for a greeting message
-    doc = nlp(message.text.lower())
-    if 'привіт' in [token.text for token in doc] or 'привет' in [token.text for token in doc]:
-        bot.reply_to(message, greeting_message)
-        return
-
-    # Handle other messages
-    bot.reply_to(message, 'Я вас не розумію, перепрошую, задайте інше питання')
-
-bot.remove_webhook()
-bot.set_webhook(url='https://ogneshka.herokuapp.com/' + bot.token)
-
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
+if __name__ == "__main__":
+    main()

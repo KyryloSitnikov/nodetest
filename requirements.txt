@@ -1,3 +1,8 @@
 TeleBot==0.0.5
 Flask==2.3.2
 spacy==3.5.2
+gspread==3.7.0
+oauth2client==4.1.3
+slack-sdk==3.11.2 # For interacting with the Slack API
+gspread==4.0.1 # For interacting with Google Sheets
+oauth2client==4.1.3 # For Google Sheets API authentication
